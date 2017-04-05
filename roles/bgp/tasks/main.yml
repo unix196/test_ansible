@@ -1,0 +1,17 @@
+---
+- name: Update cache
+  remote_user: root
+  apt: update_cache=yes
+
+- name: install bird
+  remote_user: root
+  apt: name=bird
+
+- name: copy template
+  remote_user: root
+  template: src=bird.conf.j2 dest=/etc/bird/bird.conf mode=755
+  notify: reload bird
+
+- name: Start the bird service
+  remote_user: root
+  service: name=bird state=started enabled=yes

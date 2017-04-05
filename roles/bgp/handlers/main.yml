@@ -1,0 +1,12 @@
+---
+#- name: restart bird
+#  remote_user: root
+#  service: name=bird state=started
+
+#- name: restart bird
+#  remote_user: root
+#  service: name=bird state=restarted
+
+- name: reload bird
+  remote_user: root
+  service: name=bird state=reloaded

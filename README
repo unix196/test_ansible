@@ -1,0 +1,53 @@
+
+Предварительно на машинах:
+alpha# ip route add 11.0.0.0/24 dev eth0
+bravo# ip route add 22.0.0.0/24 dev eth0
+
+Запуск роли:
+
+ansible-playbook -i hosts test.yml
+
+
+На выходе:
+
+alpha:~# ip route
+default via 192.168.1.1 dev eth0 
+11.0.0.0/24 dev eth0  scope link 
+22.0.0.0/24 via 214.0.0.42 dev eth1  proto bird
+
+
+root@alpha:~# birdc
+bird> show route all
+11.0.0.0/24        dev eth0 [kernel1 19:24:12] * (10)
+	Type: inherit unicast univ
+	Kernel.source: 3
+	Kernel.metric: 0
+22.0.0.0/24        via 214.0.0.42 on eth1 [bgp1 19:24:16] * (100) [AS65002i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 65002
+	BGP.next_hop: 214.0.0.42
+	BGP.local_pref: 100
+	BGP.community: (42,315)
+
+---------------------------
+
+bravo:~# birdc
+bird> show route all
+11.0.0.0/24        via 214.0.0.41 on eth1 [bgp1 19:23:57] * (100) [AS65001i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 65001
+	BGP.next_hop: 214.0.0.41
+	BGP.local_pref: 100
+	BGP.community: (42,315)
+22.0.0.0/24        dev eth0 [kernel1 19:23:53] * (10)
+	Type: inherit unicast univ
+	Kernel.source: 3
+	Kernel.metric: 0
+
+bravo#ip route
+default via 192.168.1.1 dev eth0
+11.0.0.0/24 via 214.0.0.41 dev eth1  proto bird
+22.0.0.0/24 dev eth0  scope link
+

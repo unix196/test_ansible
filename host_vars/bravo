@@ -1,0 +1,9 @@
+---
+# 
+
+id: 214.0.0.42
+network: 22.0.0.0/24
+local_as: 65002
+bgp_community: (42, 315)
+neighbor: 214.0.0.41
+remote_as: 65001

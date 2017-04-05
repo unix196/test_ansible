@@ -1,0 +1,41 @@
+router id {{ id }};
+
+
+filter test_filter {
+   bgp_community = -empty-;
+  bgp_community.add ({{ bgp_community }});
+  accept;
+
+}
+
+
+filter test2_filter {
+if net ~ {{ network }} then accept;
+reject;
+}
+
+
+protocol kernel {
+    persist;               
+    learn;                 
+    export all;           
+    import filter test2_filter;
+    scan time 20;           
+    device routes yes;
+}
+
+protocol device {
+    scan time 10;          
+}
+
+
+
+protocol bgp {
+    local as {{ local_as }};
+    source address {{ id }};
+
+    import all;
+    export filter test_filter;
+    neighbor {{ neighbor }} as {{ remote_as }};
+}
+

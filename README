@@ -3,6 +3,9 @@
 alpha# ip route add 11.0.0.0/24 dev eth0
 bravo# ip route add 22.0.0.0/24 dev eth0
 
+Машины общаются через интерфейсы eth1.
+
+
 Запуск роли:
 
 ansible-playbook -i hosts test.yml
